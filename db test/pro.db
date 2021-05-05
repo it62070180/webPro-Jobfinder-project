@@ -1,0 +1,343 @@
+CREATE TABLE  `JobSeeker` (
+	`jobseeker_id` INT(10) NOT NULL UNIQUE AUTO_INCREMENT,
+	`f_name` VARCHAR(255) NOT NULL,
+	`l_name` VARCHAR(255) NOT NULL,
+`date_of_birth` DATE,
+`phone_number` VARCHAR(255),
+`jobseeker_ability` TEXT NOT NULL,
+`jobseeker_experience` TEXT NOT NULL,
+`email` VARCHAR(255),
+`username` VARCHAR(255) NOT NULL ,
+`password` VARCHAR(255) NOT NULL,
+PRIMARY KEY(jobseeker_id)
+);
+
+
+CREATE TABLE `Resume`(
+	`resume_id` INT(10) NOT NULL  UNIQUE AUTO_INCREMENT,
+	`resume_info` TEXT NOT NULL,
+	`request_job` VARCHAR(255) NOT NULL,
+	`date` DATE,
+  	`img_id` int(11)  NOT NULL,
+	`res_jobseeker_id` INT(10),
+	PRIMARY KEY(resume_id)
+);
+
+CREATE TABLE `Images` (
+	`image_id` INT(10) AUTO_INCREMENT,
+	`img_resume_id` INT(10),
+	`file_path` VARCHAR(255) NOT NULL,
+	`upload_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(image_id)
+
+);
+
+CREATE TABLE `Job_position`(
+	`job_pos_id` INT(10) NOT NULL  UNIQUE AUTO_INCREMENT,
+	`job_pos_name` VARCHAR(255) NOT NULL,
+	`job_pos_resume_id` INT(10),
+	`job_pos_job_id` INT(10),
+	PRIMARY KEY(job_pos_id)
+);
+
+CREATE TABLE `Company` (
+	`company_id` INT(10) NOT NULL UNIQUE AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL,
+	`founding_data` DATE NOT NULL,
+	`company_info` TEXT NOT NULL,
+	`username` VARCHAR(255),
+	`password` VARCHAR(255),
+	PRIMARY KEY(company_id)
+);
+
+
+CREATE TABLE `Request_info` (
+	`req_id` INT(10) NOT NULL UNIQUE AUTO_INCREMENT,
+	`req_date` DATE NOT NULL,
+	`req_information` TEXT NOT NULL,
+	`req_company_id` INT(10) NOT NULL,
+	PRIMARY KEY(req_id)
+);
+
+CREATE TABLE `Request_job` (
+	`req_job_id` INT(10) NOT NULL UNIQUE AUTO_INCREMENT,
+	`req_experience` TEXT NOT NULL, 
+	`req_ability` TEXT NOT NULL,
+	`req_job_req_info_id` INT(10) NOT NULL,
+	`req_job_job_id`INT(10) NOT NULL,
+	PRIMARY KEY (req_job_id)
+);
+
+CREATE TABLE `Interview` (
+	`date` DATETIME,
+	`inter_request_job_id` INT(10) NOT NULL,
+	`inter_job_pos_id` INT(10) NOT NULL 
+);
+
+CREATE TABLE `Job_type` (
+	`job_id` INT(10) NOT NULL UNIQUE AUTO_INCREMENT,
+	`job_name` VARCHAR(255),
+	PRIMARY KEY (job_id)
+);
+
+ALTER TABLE `Resume`
+ADD CONSTRAINT res_jobseeker_id_fk
+FOREIGN KEY (res_jobseeker_id)
+REFERENCES `JobSeeker` (jobseeker_id);
+
+ALTER TABLE `Job_position`
+ADD CONSTRAINT job_pos_resume_id_fk
+FOREIGN KEY (job_pos_resume_id)
+REFERENCES `Resume` (resume_id),
+ADD CONSTRAINT  job_pos_job_id_fk
+FOREIGN KEY (job_pos_job_id)
+REFERENCES `Job_type` (job_id);
+
+ALTER TABLE `Request_info`
+ADD CONSTRAINT req_company_id_fk
+FOREIGN KEY (req_company_id)
+REFERENCES `Company` (company_id);
+
+ALTER TABLE `Request_job`
+ADD CONSTRAINT req_job_req_info_id_fk
+FOREIGN KEY (req_job_req_info_id)
+REFERENCES `Request_info` (req_id),
+ADD CONSTRAINT req_job_job_id_fk
+FOREIGN KEY (req_job_job_id)
+REFERENCES `Job_type` (job_id);
+
+ALTER TABLE `Interview`
+ADD CONSTRAINT inter_request_job_id_fk
+FOREIGN KEY (inter_request_job_id)
+REFERENCES `Request_job` (req_job_id),
+ADD CONSTRAINT inter_job_pos_id_fk
+FOREIGN KEY (inter_job_pos_id)
+REFERENCES `Job_position` (job_pos_id);
+
+ALTER TABLE `Images`
+ADD CONSTRAINT img_resume_id_fk
+FOREIGN KEY (img_resume_id)
+REFERENCES `Resume` (resume_id);
+
+
+INSERT INTO JobSeeker 
+(`f_name`,
+`l_name`,
+`date_of_birth`,
+`phone_number`,
+`jobseeker_ability`,
+`jobseeker_experience`,
+`email`,
+`username`,
+`password`)
+
+
+VALUES
+('สมหาย','หายไปเลย','1990-01-03','0813241195','ปีนต้นมะพร้าวสูง 10เมตร ตกลงมาไม่ตาย ตกตึกไม่ตาย วิ่ง 800โล ใน 5วัน ได้','ทำมาแล้วรวมๆ 20 ปี','santakub@gmail.com','santakub2544','santalove1234'),
+
+('สมชาย','ชายแท้','1987-05-27','0943254892','ดำน้ำได้1ชั่วโมง วิดพื้น10000ครั้ง วิ่งได้ 1000 กิโล','ทำมาแล้ว 8 ปี','somchai@hotmail.com','somchai123','password'),
+
+('นงพร','เชิดฉาย','1980-11-1','0958554723','ทำงานบ้านได้ทุกอย่าง ทำอาหารอร่อยทั้งอาหารคนอาหารสัตว์ สามารถขับรถได้ทุกประเภท ซ่อมเครื่องใช้ได้ทุกอย่าง พูดภาษาอังกฤษ จีน อีสาน เหนือ ใต้ได้','ทำงานแม่บ้าน Parttime มาแล้ว 10 ปี','super_nongporn@gmail.com','super nongporn','QuartKarvopx507+'),
+
+
+('ธนชัย','กิติคุณ','1994-04-20','0846574412','ตัดต่อ รูปภาพ วิดีโอ โดย adobe  สร้าง bot Discord ได้  javascript java python c++ ทำเว็บแอปได้ พูด อังกฤษได้','ทำตัดต่อ มาแล้ว 5 ปี ทำ bot discord มาแล้ว 3 ปี ทำเว็บแอปมาแล้ว 5 ปี','thanachai1994@hotmail.com','ThanaChai','Tha7402_'),
+
+
+('ชาตรี','ยาวนาน','1997-03-01','0995184382','data business, graphic design, maya, blender','ใช้ maya ออกแบบให้กับบริษัทต่างๆมากกว่า 3ปี,เป็นที่ปรึกษาให้บริษัทต่างๆมา 2ปี','chatree@hotmail.com','chatree123','chubuchubu'),
+
+('ปรีชา','ชาไทย','1980-06-07','0943284675','CSS Javascript PHP SQL','ทำมาแล้ว 10 ปี','phecha@gmail.com','phecha321','0943284675'),
+
+('Thongdee','Meechai','1980-01-01','0857649325','Excel, บัญชี,Word','มีประสบการณ์ทำงานบัญชีมาแล้ว 8 ปี','Thongdee@hotmail.com','thongdang123','yellowthong'),
+
+('ธีรวุธ','เปี่ยมสุข','1992-11-17','0861142359','มนุษย์สัมพันธ์ดี, เข้ากับคนง่าย, มีความเป็นผู้นำ, business manager, พูดได้4ภาษา ไทย อังกฤษ สเปน เยอรมัน','ทำงานมาแล้ว 4 ปี','teerawut@hotmail.com','teerawut1412','wuttisak'),
+
+('อานัน','ชัยนัด','1980-05-09','0893245792','Excel Word Photoshop Illustrator After Effects ','ทำมาแล้ว 15 ปี','arnut@hotmail.com','arnut123','123456'),
+
+('การะแม','บินเสียดฟ้า','1995-05-27','0943254892','บัญชี ซ่อมคอม ซ่อมรถ','ไม่เคยทำ','flying_gara@hotmail.com','garamare046','manamine');
+
+
+INSERT INTO Images(`file_path`)
+VALUES
+('https://i.imgur.com/FYpbkWY.png'),
+('https://i.imgur.com/alrBjQ0.png'),
+('https://i.imgur.com/TIQNtkr.png'),
+('https://i.imgur.com/phF1Kg0.png'),
+('https://i.imgur.com/ZR8IuZ7.png'),
+('https://i.imgur.com/ZLWfqam.png'),
+('https://i.imgur.com/h02UhhD.png'),
+('https://i.imgur.com/ErILP6B.png'),
+('https://i.imgur.com/9LS2rYK.png'),
+('https://i.imgur.com/cgXTWqQ.png');
+
+
+INSERT INTO Job_type(`job_name`)
+VALUES
+('Chef'),
+('Barber'),
+('Electrician'),
+('Photographer'),
+('Compositor'),
+('Dentist'),
+('Musician'),
+('Writer'),
+('Columnist'),
+('Reporter'),
+('Lawyer'),
+('Solicitor'),
+('Designer'),
+('Aviator'),
+('Pilot'),
+('Journalist'),
+('Shipwright'),
+('Butcher'),
+('Gardener'),
+('Programmer'),
+('Saleman'),
+('Graphic Design'),
+('IT Supporter'),
+('Delivery Driver'),
+('Creative'),
+('Product Marketing'),
+('Digital Marketing'),
+('MC'),
+('PR Marketing'),
+('Data Scientist'),
+('Network Admin'),
+('IT Manager'),
+('Mobile Application'),
+('System Analyst'),
+('Technical Support'),
+('Web Programmer'),
+('Sales Manager'),
+('Call Center'),
+('Customer Service'),
+('Security'),
+('Janitor'),
+('House Maid'),
+('ISO'),
+('Maintainer'),
+('Mechanic'),
+('Writer'),
+('Copywriter'),
+('Proofreader'),
+('Teacher'),
+('Machine Controller'),
+('IT Security'),
+('Surgeon Doctor'),
+('Nurse'),
+('Dentist'),
+('Medical Assist'),
+('Pharmacist'),
+('Vet'),
+('Babysitter'),
+('Explorer'),
+('Tour Operation'),
+('Translator'),
+('Guide'),
+('Data Scientist'),
+('Scientist'),
+('Researcher'),
+('Computer Mechanic'),
+('Computer Graphic'),
+('Web Design'),
+('Courier'),
+('Merchandiser'),
+('Costume Designer'),
+('Web Content Manager '),
+('Jeweler'),
+('Bartender'),
+('Waiter'),
+('Barista'),
+('Tutor'),
+('Swimming Instructor'),
+('Accountant'),
+('Graphic Artist');
+
+
+
+INSERT INTO Resume(
+`resume_info`,
+`request_job`,
+`img_id`,
+`date`)
+VALUES
+('ที่อยู่ : 11/11 ต.ปากน้ำ อ.เมือง จ.ระยอง 21000 มีใบขับขื่รถยนต์และจักรยานยนต์ จบปวช.ปากน้ำระยอง',
+'Security',
+'1',
+'2021-02-12'),
+
+
+('อยู่ จังหวัดยะลา จบปวส. ปัจจุบันกำลังศึกษาต่อระดับป.ตรีที่สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง',
+'F',
+'2',
+'2021-03-03'),
+
+('เกิดที่เชียงใหม่ ปัจจุบันอยู่ที่กรุงเทพฯ',
+'แม่บ้าน Part-time',
+'3',
+'2021-04-13'),
+
+('อยู่ จังหวัด นนทบุรี จบป.ตรี จากมหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ ปัจจุบันกำลังศึกษาต่อป.โท ที่มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ',
+'Web-Designer',
+'4',
+'2021-01-01'), 
+
+('อยู่ จังหวัด ปทุมธานี จบป.ตรี จากมหาวิทยาลัยศิลปากร จบป.โท จากมหาวิทยาลัยเชียงใหม่',
+'graphic designer',
+'5',
+'2021-01-01'),
+('อยู่ จังหวัด นนทบุรี จบป.ตรี จากมหาวิทยาลัยบูรพา',
+'Programmer',
+'6',
+'2021-03-30'),
+('อยู่ จังหวัด กรุงเทพมหานคร จบป.ตรี จากมหาวิทยาลัยธรรมศาสตร์ จบป.โท จากมหาวิทยาลัยธรรมศาสตร์',
+'บัญชี',
+'7',
+'2021-04-30'),
+('อยู่ จังหวัดกรุงเทพมหานคร จบป.ตรี จากมหาวิทยาลัยศรีปทุม ',
+'sales man',
+'8',
+'2021-05-07'),
+('อยู่ จังหวัดปทุมธานี กำลังศึกษาป.ตรี ที่มหาวิทยาลัยกรุงเทพฯ',
+'Graphic Artist',
+'9',
+'2022-01-01'),
+('อยู่ จังหวัดนนทบุรี จบป.ตรี จากมหาวิทยาลัยธรรมศาสตร์',
+'ช่างเครื่องยนต์',
+'10',
+'1990-12-31');
+
+
+INSERT INTO Job_position(`job_pos_name`,`job_pos_resume_id`,`job_pos_job_id`)
+
+VALUES
+(
+'Security','1','40'
+),
+(
+'Teacher','2','78'
+),
+(
+'House Maid','3','42'
+),
+(
+'Web Design','4','68'
+),
+(
+'Graphic Design','5','22'
+),
+(
+'Programmer','6','20'
+),
+(
+'Accountant','7','79'
+),
+(
+'Saleman','8','21'
+),
+(
+'Graphic Artist','9','80'
+),
+(
+'Mechanic','10','45'
+);
